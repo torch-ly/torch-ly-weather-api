@@ -1,8 +1,7 @@
-import json
-from copy import deepcopy
 import random
+from fastapi import FastAPI
 
-standardValues = {'temperature': 1, 'cloud': 1, 'rain': 1, 'wind': 1}
+app = FastAPI()
 
 temperatureStages = ['freezing', 'cold', 'lightly cold', 'comfortable', 'lightly warm', 'warm', 'burning hot']
 temperatureStagesValues = [5, 10, 22.5, 25, 22.5, 10, 5]
@@ -17,6 +16,7 @@ Stages = [temperatureStages, cloudStages, rainStages, windStages]
 StageValues = [temperatureStagesValues, cloudStagesValues, rainStagesValues, windStagesValues]
 
 unlogicalCombinations = {'clear': rainStages[1:], 'bright': rainStages[-2:]}
+
 """
 Json-Object structure:
 {
@@ -31,9 +31,9 @@ Json-Object structure:
 
 """
 
-
 # Non configurable API-Endpoint
-def getWeather():
+@app.get("/v1/")
+async def getWeather():
     Max = []
 
     for values in StageValues:
@@ -61,6 +61,3 @@ def getWeather():
                     return getWeather()
 
     return condition
-
-if __name__ == "__main__":
-    print(getWeather())
